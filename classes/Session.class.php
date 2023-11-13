@@ -1,7 +1,7 @@
 <?php
     class Session {
         function __construct() {
-            //TODO faszomat
+            //TODO
         }
 
         private function start() {
