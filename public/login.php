@@ -1,12 +1,12 @@
 <?php
 
-    include "../config/config.php";
+    include '../classes/requires/autoload.php';
 
     if(count($_POST) > 0) {
         $errors = User::check_instance()->login($_POST);
 
-        if(!is_array($errors)) {
-            header("Location: index.php");
+        if(empty($errors['email_error']) && empty($errors['password_error']) && empty($errors['invalid_data'])) {
+            header('Location: index.php');
             die;
         }
     }
@@ -34,19 +34,27 @@
                             <form method="POST">
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="email" name="email">
-                                    <?php 
-                                        if(isset($errors) && is_array($errors)) {
-                                            foreach($errors as $error) {
-                                                ?><p class="text-danger"><?php echo $error; ?></p><?php
+                                    <input type="email" class="form-control" id="email" name="email"
+                                        value="<?=isset($_POST['email']) ? $_POST['email'] : ''; ?>">
+                                    <?php if(isset($errors) && ($errors['email_error'] != '' || $errors['invalid_data'] != '')) {
+                                            foreach($errors as $key => $value) {
+                                                if ($key == 'email_error') {
+                                                    echo '<small class="text-danger">'. $value .'</small><br>';
+                                                }
                                             }
-                                        }
-                                    ?>
+                                        } ?>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="password" class="form-label">Password</label>
                                     <input type="password" class="form-control" id="password" name="password">
+                                    <?php if(isset($errors) && ($errors['email_error'] != '' || $errors['invalid_data'] != '')) {
+                                            foreach($errors as $key => $value) {
+                                                if ($key == 'invalid_data') {
+                                                    echo '<small class="text-danger">'. $value .'</small><br>';
+                                                }
+                                            }
+                                        } ?>
                                 </div>
                                 
                                 <button type="submit" class="btn btn-primary">Login</button>

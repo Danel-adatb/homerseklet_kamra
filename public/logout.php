@@ -1,5 +1,5 @@
 <?php
-include '../config/config.php';
+    include '../classes/requires/autoload.php';
 
 $session = new Session();
 

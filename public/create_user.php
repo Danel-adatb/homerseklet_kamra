@@ -1,6 +1,6 @@
 <?php
     
-    include '../config/config.php';
+    include '../classes/requires/autoload.php';
 
     $logged_in = User::check_instance()->is_user_logged_in();
     $is_admin = User::check_instance()->is_user_admin();
@@ -93,8 +93,7 @@
 
                                     <div class="mb-3">
                                         <label for="password" class="form-label">jelszó</label>
-                                        <input type="password" class="form-control" id="password" name="password"
-                                            value="<?=isset($_POST['password']) ? $_POST['password'] : ''; ?>">
+                                        <input type="password" class="form-control" id="password" name="password">
                                         <?php if(isset($errors) && $errors['password_error'] != '') {
                                             foreach($errors as $key => $value) {
                                                 if ($key === 'password_error') {

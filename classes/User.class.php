@@ -75,19 +75,14 @@
                 'role_error' => ''
             );
 
-            $a['email'] = trim($POST['email']);
-            $a['password'] = trim($POST['password']);
-            $a['chamber_id'] = trim($POST['chamber']);
-            $a['role'] = trim($POST['role']);
-
-            echo '<pre>';
-            print_r($a);
-            echo '</pre>';
+            $a['email'] = trim(addslashes($POST['email']));
+            $a['password'] = trim(addslashes($POST['password']));
+            $a['chamber_id'] = trim(addslashes($POST['chamber']));
+            $a['role'] = trim(addslashes($POST['role']));
 
             $email_regex = '/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/i';
-            $password_regex = '/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%]{8,12}$/';
-            $chamber_regex = '/^[A-Za-z0-9]*$/';
-            //$sql_injection_regex = '/^(?!.*[;\\<>\?!$<script>\$])(?=.*\.).*$/s';
+            $password_regex = '/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#^&_+-])[a-zA-Z0-9@#^&_+-]{8,12}$/';
+            $chamber_regex = '/^[A-Za-z0-9]+$/';
 
             //Validation
             if(empty($a['email']) || !preg_match($email_regex, $a['email'])) {
@@ -95,11 +90,11 @@
             }
 
             if(empty($a['password']) || !preg_match($password_regex, $a['password'])) {
-                $errors['password_error'] = 'Jelszó követelmények: Egy szám, legalább egy karakter, megengedett karakterek [!@#$%], 8-12 karakter hossz!';
+                $errors['password_error'] = 'Jelszó követelmények: Egy szám és egy karakter, illetve egy megengedett karakterek (@, #, ^, &, _, +, -) karaker legalább (8-12 hossz)!';
             }
 
             if(empty($a['chamber_id']) || !preg_match($chamber_regex, $a['chamber_id'])) {
-                $errors['chamber_id_error'] = 'Kamra azonosító: Számok és betúk (Nagybetű érzékeny)!';
+                $errors['chamber_id_error'] = 'Kamra azonosító: Legalább egy szám és/vagy betú (Nagybetű érzékeny)!';
             }
 
             if($a['role'] == 'choose' || ($a['role'] != 'admin' && $a['role'] != 'user')) {
@@ -107,35 +102,41 @@
             }
             
             if(empty($errors['email_error']) && empty($errors['password_error']) && empty($errors['chamber_id_error']) && empty($errors['role_error'])) {
+                $a['password'] = password_hash(trim($POST['password']), PASSWORD_DEFAULT);
                 return Database::connection('users')->sql_insert($a);
             }
-
-            echo '<pre>';
-            print_r($errors);
-            echo '</pre>';
 
             return $errors;
         }
 
 
         public function login($POST) {
-            $errors = array();
-            //$sql_injection_regex = '/^(?!.*[;\\<>\?!$<script>\$])(?=.*\.).*$/s';
+            $errors = array(
+                'email_error' => '',
+                'password_error' => '',
+                'invalid_data' => ''
+            );
 
-            $a['email'] = trim($POST['email']);
-            $password = $POST['password'];
+            $a['email'] = trim(addslashes($POST['email']));
+            $password = trim(addslashes($POST['password']));
             $data = Database::connection('users')->sql_select()->sql_where('email = :email', $a);
 
-            //TODO
+            $email_regex = '/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/i';
+            $password_regex = '/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#^&_+-])[a-zA-Z0-9@#^&_+-]{8,12}$/';
+
             //Validation
-            /*if(!preg_match($sql_injection_regex, trim($POST['email'])) && !preg_match($sql_injection_regex, trim($POST['password']))) {
-                //SQL_injection log
-            }*/
+            if(empty($a['email']) || !preg_match($email_regex, $a['email'])) {
+                $errors['email_error'] = 'Kérem a megfelelő e-mail formátumot használja (pelda@email.hu)';
+            }
+
+            if(empty($a['password']) || !preg_match($password_regex, $a['password'])) {
+                $errors['password_error'] = 'Kérem a megfelelő formátumot használja!';
+            }
             
             if(is_array($data)) {
                 $data = $data[0];
 
-                if($data->password == $password) {
+                if(password_verify($password, $data->password)) {
                     $session = new Session();
                     $session->regenerate();
 
@@ -151,7 +152,7 @@
                 }
             } 
 
-            $errors[] = 'Wrong email or password';
+            $errors['invalid_data'] = 'Nem megfelelő jelszó vagy e-mail cím!';
 
             return $errors;
         }

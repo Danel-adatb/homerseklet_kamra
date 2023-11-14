@@ -1,6 +1,6 @@
 <?php
     
-    include '../config/config.php';
+    include '../classes/requires/autoload.php';
 
     $logged_in = User::check_instance()->is_user_logged_in();
     $is_admin = User::check_instance()->is_user_admin();
@@ -12,16 +12,11 @@
     }
 
     $datas = Chart::check_instance()->get_chart_data();
-        $temperature_array = [];
-        $date_array = [];
-        $time_array = [];
 
-        foreach($datas as $data) {
-            $temperature_array[] = $data->temp;
-            $date_array[] = $data->date;
-            $time_array[] = $data->time;
-            $chartArray[] = $data;
-        }
+    foreach($datas as $data) {
+        $chartArray[] = $data;
+    }
+
 ?>
 
 <HTML>
