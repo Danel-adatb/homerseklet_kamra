@@ -100,6 +100,12 @@
             if($a['role'] == 'choose' || ($a['role'] != 'admin' && $a['role'] != 'user')) {
                 $errors['role_error'] = 'Szerepkör hiba!';
             }
+
+            $check_email = Database::connection('users')->sql_select()->sql_where('email = :email', ['email' => $a['email']]);
+
+            if(is_array($check_email) && count($check_email) > 0) {
+                $errors['email_error'] = 'E-mail már használatban van!';
+            }
             
             if(empty($errors['email_error']) && empty($errors['password_error']) && empty($errors['chamber_id_error']) && empty($errors['role_error'])) {
                 $a['password'] = password_hash(trim($POST['password']), PASSWORD_DEFAULT);
@@ -144,7 +150,6 @@
                     $a['email'] = $data->email;
                     $a['chamber_id'] = $data->chamber_id; 
                     $a['role'] = $data->role;
-                    $a['LOGGED_IN'] = 1;
 
                     $session->set('USER', $a);
 

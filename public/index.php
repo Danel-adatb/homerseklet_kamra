@@ -2,9 +2,10 @@
     
     include '../classes/requires/autoload.php';
 
+    $session = new Session();
+    $USER = $session->get('USER'); //$USER['email'];
     $logged_in = User::check_instance()->is_user_logged_in();
     $is_admin = User::check_instance()->is_user_admin();
-    
 
     if(!$logged_in) {
         header('Location: login.php');
@@ -33,7 +34,7 @@
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <div class="container-fluid">
                         <?php if($is_admin) { ?>
-                            <a>Diagramm</a>
+                            <span>Üdvözlet <?php echo htmlspecialchars($USER['email']); ?></span>
                         <?php } ?>
 
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -106,7 +107,8 @@
                 data: temperatures,
                 backgroundColor:'rgba(255, 26, 104, 0.2)',
                 borderColor: 'rgba(255, 26, 104, 1)',
-                tension: 0.4
+                tension: 0.4,
+                
             }]
         };
 
@@ -120,7 +122,8 @@
                         type: 'time',
                         time: {
                             unit: 'minute',
-                            stepSize: 10
+                            stepSize: 10,
+                            tooltipFormat: 'HH:mm:ss',
                         }
                     },
                     y: {

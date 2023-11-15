@@ -81,11 +81,11 @@
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email</label>
                                         <input type="email" class="form-control" id="email" name="email"
-                                            value="<?=isset($_POST['email']) ? $_POST['email'] : ''; ?>">
+                                            value="<?=isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
                                         <?php if(isset($errors) && $errors['email_error'] != '') {
                                             foreach($errors as $key => $value) {
                                                 if ($key === 'email_error') {
-                                                    echo '<small class="text-danger">'. $value .'</small><br>';
+                                                    echo '<small class="text-danger">'. htmlspecialchars($value) .'</small><br>';
                                                 }
                                             }
                                         } ?>
@@ -97,7 +97,7 @@
                                         <?php if(isset($errors) && $errors['password_error'] != '') {
                                             foreach($errors as $key => $value) {
                                                 if ($key === 'password_error') {
-                                                    echo '<small class="text-danger">'. $value .'</small><br>';
+                                                    echo '<small class="text-danger">'. htmlspecialchars($value) .'</small><br>';
                                                 }
                                             }
                                         } ?>
@@ -106,11 +106,11 @@
                                     <div class="mb-3">
                                         <label for="chamber" class="form-label">Kamra azonosító</label>
                                         <input type="text" class="form-control" id="chamber" name="chamber"
-                                            value="<?=isset($_POST['chamber']) ? $_POST['chamber'] : ''; ?>">
+                                            value="<?=isset($_POST['chamber']) ? htmlspecialchars($_POST['chamber']) : ''; ?>">
                                         <?php if(isset($errors) && $errors['chamber_id_error'] != '') {
                                             foreach($errors as $key => $value) {
                                                 if ($key === 'chamber_id_error') {
-                                                    echo '<small class="text-danger">'. $value .'</small><br>';
+                                                    echo '<small class="text-danger">'. htmlspecialchars($value) .'</small><br>';
                                                 }
                                             }
                                         } ?>
@@ -128,7 +128,7 @@
                                         <?php if(isset($errors) && $errors['role_error'] != '') {
                                             foreach($errors as $key => $value) {
                                                 if ($key === 'role_error') {
-                                                    echo '<small class="text-danger">'. $value .'</small><br>';
+                                                    echo '<small class="text-danger">'. htmlspecialchars($value) .'</small><br>';
                                                 }
                                             }
                                         } ?>
