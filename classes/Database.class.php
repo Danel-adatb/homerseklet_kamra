@@ -55,7 +55,8 @@
                         break;
 
                     case 'DELETE':
-                        //TODO
+                        //Things went well
+                        return true;
                         break;
                 }
             }
@@ -67,6 +68,12 @@
         public function sql_select() {
             $this->query_type = "SELECT";
             $this->query = "SELECT * FROM " . self::$table . " ";
+            return self::$instance;
+        }
+
+        public function sql_delete() {
+            $this->query_type = "DELETE";
+            $this->query = "DELETE FROM " . self::$table . " ";
             return self::$instance;
         }
 
@@ -82,6 +89,9 @@
 
                 case 'UPDATE':
                         $values = array_merge($this->values, $values);
+                        $this->query .= " WHERE " . $where;
+                    break;
+                case 'DELETE':
                         $this->query .= " WHERE " . $where;
                     break;
             }

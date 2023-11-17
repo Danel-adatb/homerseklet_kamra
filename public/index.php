@@ -47,7 +47,7 @@
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                                 <?php if($is_admin) { ?>
                                     <li class="nav-item">
-                                        <a href="create_user.php" class="nav-link" href="#">Felhasználók</a>
+                                        <a href="create_user.php" class="nav-link" href="#">Adminisztrátor</a>
                                     </li>
                                 <?php } else { ?>
                                     <li class="nav-item">

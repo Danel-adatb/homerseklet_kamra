@@ -162,8 +162,8 @@
             return $errors;
         }
 
-        public function delete_user() {
-
+        public function delete_user_by_id($id) {
+            return Database::connection('users')->sql_delete()->sql_where('id = :id', ['id' => $id]);
         }
 
         public function update_user_by_id($values = array(), $id) {

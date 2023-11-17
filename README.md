@@ -10,3 +10,7 @@
 - AJAX HOGY 5 percenként jelezzen újra adatokat a chart.js
 
 https://www.youtube.com/watch?v=pIO0pmMTJ6Y utolsó szekció?
+- CSRF Token X
+- chambers - users table megtervezése (pivot table-re is szükség lesz) X
+- Delete OK (users)
+- Delete X (chambers)
